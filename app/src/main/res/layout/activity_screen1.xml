@@ -1,0 +1,85 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/screen1Root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/txtSpeak"
+        android:gravity="center"
+        android:text="Click on Speak Command Button.Speak Red or Green or Blue Any"
+        android:textSize="25sp"
+        android:fontFamily="arial"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <Button android:id="@+id/btnSpeak"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/txtSpeak"
+        android:layout_centerInParent="true"
+        android:text="Speak Command"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button android:id="@+id/btnStop"
+        android:layout_below="@+id/btnSpeak"
+        android:layout_centerInParent="true"
+        android:text="Stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:padding="20dp"
+
+        android:layout_below="@+id/btnStop"
+        android:id="@+id/txtWrite"
+        android:gravity="center"
+        android:text=""
+        android:textSize="25sp"
+        android:fontFamily="arial"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_below="@+id/txtWrite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white">
+
+        <!-- Recognized Speech Text -->
+        <TextView
+            android:id="@+id/speechTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Say something..."
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:padding="16dp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <!-- Mic Button (animated with RMS level) -->
+        <ImageView
+            android:id="@+id/micButton"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@android:drawable/ic_btn_speak_now"
+            android:background="@android:color/transparent"
+            android:contentDescription="Mic Button"
+            app:layout_constraintTop_toBottomOf="@id/speechTextView"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="40dp"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
