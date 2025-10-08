@@ -15,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.nsv.voice_demo.databinding.ActivityMainBinding
+import com.nsv.voice_demo.fragment.FirstFragment
 import com.nsv.voice_demo.googlesdk.AssistantSDK
+import com.nsv.voice_demo.service.VoiceService
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity(), ContinuousSpeechManager.SpeechResultListener {
@@ -38,8 +40,14 @@ class MainActivity : AppCompatActivity(), ContinuousSpeechManager.SpeechResultLi
         setContentView(binding.root)
         ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, 1)
 
+// Load FirstFragment if not already loaded
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, FirstFragment())
+                .commit()
+        }
 
-        SpeechManagerInit()
+//        SpeechManagerInit()
 
 
 
@@ -47,7 +55,10 @@ class MainActivity : AppCompatActivity(), ContinuousSpeechManager.SpeechResultLi
 
     }
 
-
+    private fun startVoiceService() {
+        val serviceIntent = Intent(this, VoiceService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
 
 
     private fun SpeechManagerInit() {
@@ -82,7 +93,7 @@ class MainActivity : AppCompatActivity(), ContinuousSpeechManager.SpeechResultLi
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
 
                 Toast.makeText(this, "Permissions granted ✅", Toast.LENGTH_SHORT).show()
-
+                startVoiceService()
             } else {
                 Toast.makeText(
                     this,
@@ -96,7 +107,7 @@ class MainActivity : AppCompatActivity(), ContinuousSpeechManager.SpeechResultLi
     override fun onResume() {
         super.onResume()
         if (hasAllPermissions()) {
-            speechManager.startListening()
+//            speechManager.startListening()
         }else{
             Toast.makeText(this,"Please Grant Permission for Use ❌",Toast.LENGTH_LONG).show()
         }
@@ -104,18 +115,18 @@ class MainActivity : AppCompatActivity(), ContinuousSpeechManager.SpeechResultLi
 
     override fun onPause() {
         super.onPause()
-        speechManager.stopListening()
+//        speechManager.stopListening()
     }
 
 
     override fun onDestroy() {
         super.onDestroy()
-        speechManager.destroy()
+//        speechManager.destroy()
     }
     override fun onSpeechResult(command: String) {
         Log.i("MainActivity", "Recognized: $command")
 
-        binding.txtPartial.text = command
+//        binding.txtPartial.text = command
 
         when {
             "next" in command -> startActivity(Intent(this, Screen1Activity::class.java))

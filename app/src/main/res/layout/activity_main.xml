@@ -5,7 +5,7 @@
     android:id="@+id/root1"
     android:orientation="vertical">
 
-    <TextView
+   <!-- <TextView
         android:gravity="center"
         android:textSize="20sp"
         android:id="@+id/txtPartial"
@@ -24,7 +24,12 @@
         android:id="@+id/btnScreen1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Screen" />
+        android:text="Go to Screen" />-->
 
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
