@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.VoiceDetectionDemo" parent="Base.Theme.VoiceDetectionDemo" />
+    <dimen name="button_size_step">50dp</dimen>
+    <dimen name="button_min_size">50dp</dimen>
 </resources>
