@@ -1,5 +1,7 @@
 package com.nsv.voice_demo.fragment
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import com.nsv.voice_demo.ContinuousSpeechManager
 import com.nsv.voice_demo.R
@@ -55,9 +59,13 @@ class FirstFragment : Fragment() {
 
     private fun handleVoiceCommand(command: String) {
         val stepSizePx = resources.getDimensionPixelSize(R.dimen.button_size_step)
+        view?.let {
+            val txtFinal = it.findViewById<TextView>(R.id.txtFinal)
+            txtFinal.text = command
+        }
 
         when {
-            command.contains("home") -> {
+            command.contains("home") || command.contains("go home") -> {
                 // Replace with actual fragment you want to open
                 val homeFragment = HomeFragment()
                 parentFragmentManager.beginTransaction()
@@ -66,7 +74,7 @@ class FirstFragment : Fragment() {
                     .commit()
             }
 
-            command.contains("settings") -> {
+            command.contains("settings") || command.contains("go settings") -> {
                 val settingsFragment = SettingsFragment()
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, settingsFragment)
@@ -125,6 +133,15 @@ class FirstFragment : Fragment() {
                     Log.d("VoiceCommand", "Button size decreased to: W=${layoutParams?.width}, H=${layoutParams?.height}")
                 }
 
+            }
+
+            command.contains("camera") || command.contains("open camera") -> {
+                // Replace with actual fragment you want to open
+                val cameraFragment = CameraFragment()
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, cameraFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
 
 

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Capture Image Button -->
+    <ImageButton
+        android:id="@+id/captureImageBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@android:drawable/ic_menu_camera"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recordVideoBtn"
+        android:contentDescription="Capture Image"
+        android:layout_margin="16dp" />
+
+    <!-- Record Video Button -->
+    <ImageButton
+        android:id="@+id/recordVideoBtn"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@android:drawable/ic_btn_speak_now"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/captureImageBtn"
+        app:layout_constraintEnd_toStartOf="@id/zoomInBtn"
+        android:contentDescription="Record Video"
+        android:layout_margin="16dp" />
+
+    <!-- Zoom In -->
+    <ImageButton
+        android:id="@+id/zoomInBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@android:drawable/ic_menu_add"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/recordVideoBtn"
+        android:layout_margin="16dp" />
+
+    <!-- Zoom Out -->
+    <ImageButton
+        android:id="@+id/zoomOutBtn"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@android:drawable/ic_menu_revert"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/zoomInBtn"
+        android:layout_margin="16dp" />
+
+    <ImageView
+        android:id="@+id/imagePreview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="16dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:background="@android:color/darker_gray"
+        android:contentDescription="Last captured image preview"
+        android:elevation="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

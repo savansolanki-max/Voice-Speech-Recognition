@@ -37,14 +37,25 @@ class ContinuousSpeechManager(
 
     private val recognizerIntent: Intent by lazy {
         Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, context.packageName)
             putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
-            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
+            putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, true)
+//            putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
             // Silence detection parameters for more robust continuous listening.
-            putExtra("android.speech.extra.SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS", 1000L)
-            putExtra("android.speech.extra.SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS", 700L)
-            putExtra("android.speech.extra.SPEECH_INPUT_MINIMUM_LENGTH_MILLIS", 2000L)
+            /*  putExtra("android.speech.extra.SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS", 1000L)
+              putExtra("android.speech.extra.SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS", 700L)
+              putExtra("android.speech.extra.SPEECH_INPUT_MINIMUM_LENGTH_MILLIS", 2000L)*/
+
+            putExtra("android.speech.extra.SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS", 100)
+            putExtra("android.speech.extra.SPEECH_INPUT_MINIMUM_LENGTH_MILLIS", 100)
+            putExtra(
+                "android.speech.extra.SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS",
+                100
+            )
         }
     }
 
@@ -207,9 +218,10 @@ class ContinuousSpeechManager(
      * @param partialResults The partial recognition results.
      */
     override fun onPartialResults(partialResults: Bundle) {
-        partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull()?.let {
-            listener.onSpeechResult(it)
-        }
+        partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.firstOrNull()
+            ?.let {
+//            listener.onSpeechResult(it)
+            }
     }
 
     /**
@@ -232,15 +244,18 @@ class ContinuousSpeechManager(
                     startListening()
                 }, 2000)
             }
+
             SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> {
                 // Permissions error is not recoverable by restarting.
                 isListening = false
             }
+
             SpeechRecognizer.ERROR_NO_MATCH,
             SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> {
                 // These are common and recoverable; just restart listening.
                 restartListening()
             }
+
             else -> {
                 // Handle all other recoverable errors by restarting.
                 restartListening()

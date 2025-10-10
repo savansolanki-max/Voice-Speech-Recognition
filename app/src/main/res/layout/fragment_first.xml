@@ -6,32 +6,33 @@
     tools:context=".fragment.FirstFragment">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/root1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:id="@+id/root1"
         android:orientation="vertical">
 
         <TextView
-            android:gravity="center"
-            android:textSize="20sp"
             android:id="@+id/txtPartial"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp" />
 
         <TextView
-            android:gravity="center"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
             android:id="@+id/txtFinal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
         <Button
             android:id="@+id/btnFirst"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home" />
+            android:text="Camera" />
 
 
     </LinearLayout>
