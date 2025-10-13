@@ -7,6 +7,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/root1"
+        android:padding="30dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -33,6 +34,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Camera" />
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btnStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Speech" />
+
+        <Button
+            android:visibility="gone"
+            android:id="@+id/btnStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stop Speech" />
 
 
     </LinearLayout>

@@ -76,5 +76,16 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
+    <TextView
+        android:id="@+id/txtPreview"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentTop="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

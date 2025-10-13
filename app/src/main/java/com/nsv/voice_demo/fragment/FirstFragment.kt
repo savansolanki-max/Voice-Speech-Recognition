@@ -2,6 +2,7 @@ package com.nsv.voice_demo.fragment
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,9 +13,11 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.nsv.voice_demo.ContinuousSpeechManager
 import com.nsv.voice_demo.R
 import com.nsv.voice_demo.service.VoiceCommandEvent
+import com.nsv.voice_demo.service.VoiceService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -40,6 +43,16 @@ class FirstFragment : Fragment() {
         // Initialize the minimum size (e.g., 50dp) once the view is available
         // You'll need to define <dimen name="button_min_size">50dp</dimen> in dimens.xml
         minButtonSizePx = resources.getDimensionPixelSize(R.dimen.button_min_size)
+
+
+        view?.findViewById<Button>(R.id.btnStart)?.setOnClickListener {
+
+            startVoiceService()
+        }
+
+        view?.findViewById<Button>(R.id.btnStart)?.setOnClickListener {
+            stopVoiceService()
+        }
     }
     override fun onStart() {
         super.onStart()
@@ -55,7 +68,15 @@ class FirstFragment : Fragment() {
     fun onVoiceCommandReceived(event: VoiceCommandEvent) {
         handleVoiceCommand(event.command)
     }
+    private fun startVoiceService() {
+        val serviceIntent = Intent(requireContext(), VoiceService::class.java)
+        ContextCompat.startForegroundService(requireContext(), serviceIntent)
+    }
 
+    private fun stopVoiceService() {
+        val serviceIntent = Intent(requireContext(), VoiceService::class.java)
+        requireContext().stopService(serviceIntent)
+    }
 
     private fun handleVoiceCommand(command: String) {
         val stepSizePx = resources.getDimensionPixelSize(R.dimen.button_size_step)

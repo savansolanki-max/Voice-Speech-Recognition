@@ -1,6 +1,8 @@
 package com.nsv.voice_demo.fragment
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -10,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.core.FocusMeteringAction.FLAG_AE
@@ -23,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.nsv.voice_demo.R
 import com.nsv.voice_demo.service.VoiceCommandEvent
+import com.nsv.voice_demo.service.VoiceService
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -101,6 +105,41 @@ class CameraFragment : Fragment() {
         handleVoiceCommand(event.command)
     }
 
+    private var commandDialog: AlertDialog? = null
+    private fun showCommandSuggestions() {
+        // List of all available voice commands with descriptions
+        val supportedCommands = listOf(
+            "zoom in – Zoom camera in",
+            "zoom out – Zoom camera out",
+            "capture – Take a photo",
+            "front – Switch to front camera",
+            "default – Switch to back camera",
+            "focus – Focus at center",
+            "up/brighter – Increase brightness",
+            "down/dimmer – Decrease brightness",
+            "close camera/close – Exit camera screen",
+            "help/commands – Show this command list",
+            "ok/okay - Dismiss command list dialog"
+        )
+
+        // Create and show AlertDialog
+        commandDialog = AlertDialog.Builder(requireContext())
+            .setTitle("Available Voice Commands")
+            .setItems(supportedCommands.toTypedArray(), null) // just display, no click action
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+
+        commandDialog?.show()
+    }
+
+    // Function to dismiss dialog programmatically
+    private fun dismissCommandDialog() {
+        commandDialog?.dismiss()
+        commandDialog = null
+    }
+
     private var lastCommand = ""
     private var lastCommandTime = 0L
     private fun handleVoiceCommand(command: String) {
@@ -111,7 +150,7 @@ class CameraFragment : Fragment() {
             Log.d("CameraFragment", "Duplicate command ignored: $command")
             return
         }
-
+        view?.let { it.findViewById<TextView>(R.id.txtPreview).text = command }
         lastCommand = command
         lastCommandTime = currentTime
 
@@ -125,50 +164,105 @@ class CameraFragment : Fragment() {
             }
 
             command.contains("capture") -> {
-                Log.i("COUNT","captureImage")
+                Log.i("COUNT", "captureImage")
                 captureImage()
 
             }
 
-           /* command.contains("video",ignoreCase = true) || command.contains("video record",ignoreCase = true) || command.contains("start video",ignoreCase = true) -> {
-                toggleRecording()
-            }
+            /* command.contains("video",ignoreCase = true) || command.contains("video record",ignoreCase = true) || command.contains("start video",ignoreCase = true) -> {
+                 toggleRecording()
+             }
 
-            command.contains("pause video", ignoreCase = true) -> pauseRecording()
+             command.contains("pause video", ignoreCase = true) -> pauseRecording()
 
-            command.contains("resume video", ignoreCase = true) -> resumeRecording()
+             command.contains("resume video", ignoreCase = true) -> resumeRecording()
 
-            command.contains("stop video", ignoreCase = true) -> stopRecording()*/
-            command.contains("close camera", ignoreCase = true) || command.contains("close", ignoreCase = true) || command.contains("back") -> {
+             command.contains("stop video", ignoreCase = true) -> stopRecording()*/
+            command.contains("close camera", ignoreCase = true) || command.contains(
+                "close",
+                ignoreCase = true
+            ) || command.contains("back") -> {
                 stopCamera()
                 closeCameraScreen()
             }
-            command.contains("front",ignoreCase = true) || command.contains("front camera",ignoreCase = true)->{
-              /*  lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
-                    CameraSelector.LENS_FACING_FRONT
-                } else {
-                    CameraSelector.LENS_FACING_BACK
-                }*/
-                lensFacing =  CameraSelector.LENS_FACING_FRONT
-                startCamera() // Restart camera with new lensFacing
-            }
 
-            command.contains("back camera",ignoreCase = true) || command.contains("back lens",ignoreCase = true) || command.contains("default",ignoreCase = true)->{
+            command.contains("front", ignoreCase = true) || command.contains(
+                "front camera",
+                ignoreCase = true
+            ) -> {
                 /*  lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
                       CameraSelector.LENS_FACING_FRONT
                   } else {
                       CameraSelector.LENS_FACING_BACK
                   }*/
-                lensFacing =  CameraSelector.LENS_FACING_BACK
+                lensFacing = CameraSelector.LENS_FACING_FRONT
                 startCamera() // Restart camera with new lensFacing
             }
 
-            command.contains("focus",ignoreCase = true)->{
+            command.contains("back camera", ignoreCase = true) || command.contains(
+                "back lens",
+                ignoreCase = true
+            ) || command.contains("default", ignoreCase = true) -> {
+                /*  lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                      CameraSelector.LENS_FACING_FRONT
+                  } else {
+                      CameraSelector.LENS_FACING_BACK
+                  }*/
+                lensFacing = CameraSelector.LENS_FACING_BACK
+                startCamera() // Restart camera with new lensFacing
+            }
+
+            command.contains("focus", ignoreCase = true) -> {
                 focusCenter(camera.cameraControl, previewView)
             }
+
+            command.contains("brightness up", ignoreCase = true) || command.contains(
+                "up",
+                ignoreCase = true
+            ) || command.contains(
+                "aap",
+                ignoreCase = true
+            ) || command.contains(
+                "brighter",
+                ignoreCase = true
+            ) -> {
+                adjustBrightness(true)
+            }
+
+            command.contains("brightness down", ignoreCase = true) || command.contains(
+                "down",
+                ignoreCase = true
+            ) || command.contains("dimmer", ignoreCase = true) -> {
+                adjustBrightness(false)
+            }
+
+            command.contains("help", ignoreCase = true) ||
+                    command.contains("commands", ignoreCase = true) -> showCommandSuggestions()
+
+            command.contains("ok", ignoreCase = true) -> dismissCommandDialog()
         }
 
     }
+
+    private var currentExposureIndex = 0
+
+    private fun adjustBrightness(increase: Boolean) {
+        val exposureState = camera.cameraInfo.exposureState
+        val minExposure = exposureState.exposureCompensationRange.lower
+        val maxExposure = exposureState.exposureCompensationRange.upper
+
+        // Update exposure index within range
+        currentExposureIndex = if (increase) {
+            (currentExposureIndex + 1).coerceAtMost(maxExposure)
+        } else {
+            (currentExposureIndex - 1).coerceAtLeast(minExposure)
+        }
+
+        camera.cameraControl.setExposureCompensationIndex(currentExposureIndex)
+        Toast.makeText(requireContext(), "Brightness: $currentExposureIndex", Toast.LENGTH_SHORT)
+            .show()
+    }
+
     fun focusCenter(cameraControl: CameraControl, previewView: PreviewView) {
         // Get the center point of the PreviewView
         val factory: MeteringPointFactory = previewView.meteringPointFactory
@@ -186,7 +280,7 @@ class CameraFragment : Fragment() {
         cameraControl.startFocusAndMetering(action)
     }
 
-     var lensFacing:Int = CameraSelector.LENS_FACING_BACK
+    var lensFacing: Int = CameraSelector.LENS_FACING_BACK
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
