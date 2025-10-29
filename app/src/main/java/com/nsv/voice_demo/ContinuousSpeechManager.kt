@@ -244,6 +244,12 @@ class ContinuousSpeechManager(
                     startListening()
                 }, 2000)
             }
+            SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED ->{
+                Log.d("SDDSDD",errorMessage)
+            }
+            SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE ->{
+                Log.d("SDDSDD",errorMessage)
+            }
 
             SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> {
                 // Permissions error is not recoverable by restarting.
@@ -307,6 +313,8 @@ class ContinuousSpeechManager(
         SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognizer busy"
         SpeechRecognizer.ERROR_SERVER -> "Server error"
         SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
+        SpeechRecognizer.ERROR_LANGUAGE_NOT_SUPPORTED->" Language is not available to be used with the current recognizer."
+        SpeechRecognizer.ERROR_LANGUAGE_UNAVAILABLE -> "Language is supported, but not available currently (e.g. not downloaded yet)."
         else -> "Unknown error"
     }
 }
